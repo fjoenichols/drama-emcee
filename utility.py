@@ -24,9 +24,9 @@ def crafters_list( crafters ):
             proper_name = json.loads( redis_conf.r.get("player_professions: " + player_name + "+" + player_realm) ).get("character").get("name")
             proper_realm = json.loads( redis_conf.r.get("player_professions: " + player_name + "+" + player_realm) ).get("character").get("realm").get("name")
 
-            c.append(proper_name + "-" + proper_realm)
+            c.append("> " + proper_name + "-" + proper_realm)
 
-        return ", ".join(c)
+        return "\n ".join(c)
 
 def roll( d ):
     return random.randint( 1, d )
