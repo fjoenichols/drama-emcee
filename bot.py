@@ -1,7 +1,6 @@
 from configs import redis_conf, discord_conf
-import discord, caching, json, utility, retrieval, typing
+import discord, utility
 from discord.ext import commands
-from discord import app_commands
 from discord import Interaction
 
 r = redis_conf.r
@@ -27,26 +26,9 @@ def run_discord_bot():
     async def roll( interaction : Interaction, d: int ):
         await interaction.response.send_message( f"{ interaction.user } rolled a d{ d } and got a { utility.roll( d ) }" )
 
-    @client.tree.command(name="who_knows_profession", description="search which guild members know a specific profession")
-    async def who_knows_profession( interaction : Interaction, profession: str ):
-        profession = profession.lower()
-        await interaction.response.send_message(retrieval.who_knows_profession( profession ))
-
     @client.tree.command(name="who_knows_recipe", description="search which guild members know a specific recipe")
-    async def who_can_craft( interaction : Interaction, recipe: str ):
+    async def who_knows_recipe( interaction : Interaction, recipe: str ):
         recipe = recipe.lower()
-        await interaction.response.send_message(retrieval.who_knows_recipe( recipe ))
-
-    @who_knows_profession.autocomplete("profession")
-    async def profession_autocompletion(
-        interaction: discord.Interaction,
-        current: str
-    ) -> typing.List[app_commands.Choice[str]]:
-        professions_list = r.get( "game-data: professions-list" ).split(",")
-        data = []
-        for profession_choice in professions_list:
-            if current.lower() in profession_choice.lower():
-                data.append(app_commands.Choice(name=profession_choice, value=profession_choice))
-        return data
+        await interaction.response.send_message(utility.who_knows_recipe( recipe ))
 
     client.run(TOKEN)
