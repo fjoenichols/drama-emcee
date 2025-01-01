@@ -23,7 +23,7 @@ def crafters_list( crafters ):
             proper_name = json.loads( redis_conf.r.get("player_professions: " + player_realm + ": " + player_name) ).get("character").get("name")
             proper_realm = json.loads( redis_conf.r.get("player_professions: " + player_realm + ": " + player_name) ).get("character").get("realm").get("name")
 
-            c.append(">" + proper_name + "-" + proper_realm + "\n")
+            c.append(proper_name + "-" + proper_realm)
 
         return ", ".join(c)
 
