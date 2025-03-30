@@ -1,6 +1,8 @@
-from configs import redis_conf
+from configs import redis_conf, discord_conf
+from discord_webhook import DiscordWebhook
 import json, time, caching
 
+WEBHOOK_URL = discord_conf.WEBHOOK_URL
 guild_slug = 'drama-club'
 guild_realm_slug = "mugthol"
 
@@ -86,4 +88,9 @@ for character in guild_roster:
 end_time = time.time()
 
 execution_time = (end_time - start_time)/60 
-print("Execution time: " + str(execution_time) + " minutes.")
+
+success_message = "Profession Sync Successful. Execution time: " + str(execution_time) + " minutes."
+print(success_message)
+
+webhook = DiscordWebhook(url=WEBHOOK_URL, content=success_message)
+response = webhook.execute()
