@@ -1,34 +1,52 @@
-from configs import redis_conf, discord_conf
-import discord, utility
+"""
+Bot entry point — initialises the Discord client and loads all Cogs.
+
+To add a new feature, create a new file in cogs/ with a setup(bot) coroutine
+and add its module path to the COGS list below.
+"""
+
+import discord
 from discord.ext import commands
-from discord import Interaction
+from configs import discord_conf
 
-r = redis_conf.r
+TOKEN = discord_conf.TOKEN
 
-def run_discord_bot():
-    TOKEN = discord_conf.TOKEN
+# ---------------------------------------------------------------------------
+# Cog registry — add new feature modules here
+# ---------------------------------------------------------------------------
+COGS = [
+    "cogs.general",
+    "cogs.professions",
+]
+
+
+async def _load_cogs(bot: commands.Bot) -> None:
+    """Load all Cog extensions registered in the COGS list."""
+    for cog in COGS:
+        await bot.load_extension(cog)
+        print(f"  loaded cog: {cog}")
+
+
+def run_discord_bot() -> None:
+    """Initialise and run the Discord bot until interrupted."""
     intents = discord.Intents.all()
     intents.message_content = True
-    client = commands.Bot( command_prefix='.', description='Retrieves guild roster information as json output from battle.net\'s world of warcraft profile api and caches it to redis', intents=intents)
 
-    @client.event
-    async def on_ready():
-        await client.tree.sync()
-        await client.change_presence(activity=discord.activity.Game(name="World of Warcraft"))
-        print( f'{ client.user.name } just showed up!' )
+    bot = commands.Bot(
+        command_prefix=".",
+        description=(
+            "Drama Club guild bot — queries guild roster, professions, and "
+            "recipe data via the Battle.net API."
+        ),
+        intents=intents,
+    )
 
-    @client.tree.command(name="ping", description="show ping")
-    async def ping( interaction : Interaction ):
-        bot_latency = round( client.latency*1000 )
-        await interaction.response.send_message(f"Pong!... {bot_latency} ms")
+    @bot.event
+    async def on_ready() -> None:
+        print(f"\nLoading cogs...")
+        await _load_cogs(bot)
+        await bot.tree.sync()
+        await bot.change_presence(activity=discord.activity.Game(name="World of Warcraft"))
+        print(f"\n{bot.user.name} just showed up!")
 
-    @client.tree.command(name="roll", description="roll a die with 'd' sides")
-    async def roll( interaction : Interaction, d: int ):
-        await interaction.response.send_message( f"{ interaction.user } rolled a d{ d } and got a { utility.roll( d ) }" )
-
-    @client.tree.command(name="who_knows_recipe", description="search which guild members know a specific recipe")
-    async def who_knows_recipe( interaction : Interaction, recipe: str ):
-        recipe = recipe.lower()
-        await interaction.response.send_message(utility.who_knows_recipe( recipe ))
-
-    client.run(TOKEN)
+    bot.run(TOKEN)

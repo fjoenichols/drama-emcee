@@ -1,4 +1,9 @@
-import bot 
+"""
+Application entry point.
+Run this file to start the Drama Emcee Discord bot.
+"""
 
-if __name__ == '__main__':
+import bot
+
+if __name__ == "__main__":
     bot.run_discord_bot()
