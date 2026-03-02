@@ -25,7 +25,7 @@ jobs:
       - name: Create config files
         run: |
           cp ./configs/blizz_conf_example.py ./configs/blizz_conf.py 
-          cp ./config/discord_conf_example.py ./configs/discord_conf.py 
+          cp ./configs/discord_conf_example.py ./configs/discord_conf.py 
           cp ./configs/redis_conf_example.py ./configs/redis_conf.py
       
       - name: Install dependencies
