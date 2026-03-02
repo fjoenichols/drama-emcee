@@ -24,9 +24,9 @@ jobs:
 
       - name: Create config files
         run: |
-          cp ./config/blizz_conf_example.py ./config/blizz_conf.py 
-          cp ./config/discord_conf_example.py ./config/discord_conf.py 
-          cp ./config/redis_conf_example.py ./config/redis_conf.py
+          cp ./configs/blizz_conf_example.py ./configs/blizz_conf.py 
+          cp ./config/discord_conf_example.py ./configs/discord_conf.py 
+          cp ./configs/redis_conf_example.py ./configs/redis_conf.py
       
       - name: Install dependencies
         run: pip3 install -r requirements.txt
