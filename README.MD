@@ -50,10 +50,17 @@ drama-emcee/
 
 ## Setup
 
-### 1. Install dependencies
+### 1. Create a virtual environment and install dependencies
 
 ```bash
-pip install -r requirements.txt
+python3 -m venv .venv
+.venv/bin/pip3 install -r requirements.txt
+```
+
+Or use the Makefile shortcut:
+
+```bash
+make install
 ```
 
 ### 2. Create config files
@@ -111,6 +118,38 @@ The sync script is designed to be run via cron or any scheduler:
 
 ## Running Tests
 
+The test suite uses `pytest` with mocked dependencies — no live Redis or Battle.net connection is required.
+
+### Option 1 — Docker (recommended, cross-platform)
+
+Works identically on Windows, macOS, and Linux. Requires [Docker](https://docs.docker.com/get-docker/) to be installed.
+
 ```bash
-pytest tests/
+docker build -t drama-emcee-test .
+docker run --rm drama-emcee-test
 ```
+
+Or via the Makefile shortcut:
+
+```bash
+make test
+```
+
+### Option 2 — Local Python (Mac / Linux fast path)
+
+Requires Python 3. The Makefile manages a local virtualenv at `.venv/` automatically — no manual `source` step needed.
+
+```bash
+make test-local
+# creates .venv/ if absent, installs deps into it, then runs: python3 -m pytest tests/ -v
+```
+
+To set up the virtualenv and install dependencies without running tests:
+
+```bash
+make install
+```
+
+### Option 3 — GitHub Actions (automatic, on push / PR)
+
+Tests run automatically in CI on every push and pull request to `main`. No local setup needed — just open a PR and the workflow will report results. See `.github/workflows/test.yml`.
