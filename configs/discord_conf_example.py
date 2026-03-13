@@ -5,3 +5,4 @@ Copy this file to configs/discord_conf.py and fill in your credentials.
 
 TOKEN = "[ discord bot token ]"
 WEBHOOK_URL = "[ discord webhook url ]"
+LEADERBOARD_WEBHOOK_URL = "[ leaderboard discord webhook url ]"

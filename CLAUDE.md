@@ -1,6 +1,6 @@
-# AGENTS.md — Drama Emcee
+# CLAUDE.md — Drama Emcee
 
-> **Sync note:** This file is a mirror of `CLAUDE.md`. Both files must be kept identical in content (except for this header block and the corresponding note in `CLAUDE.md`). When updating one, update the other.
+> **Sync note:** This file is a mirror of `AGENTS.md`. Both files must be kept identical in content (except for this header block and the corresponding note in `AGENTS.md`). When updating one, update the other.
 
 Guidelines for AI agents and contributors working in this repository.
 
@@ -128,7 +128,7 @@ Before considering any task complete, you must:
 
 Do not report a task as complete until all applicable steps above are done.
 
---- 
+---
 
 ## MCP / Tools
 

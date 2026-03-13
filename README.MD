@@ -40,10 +40,12 @@ drama-emcee/
 │   └── professions.py             # Profession & recipe query logic
 │
 ├── tasks/                         # Background / scheduled tasks
-│   └── profession_sync.py         # Rebuilds the profession/recipe cache from Battle.net
+│   ├── profession_sync.py         # Rebuilds the profession/recipe cache from Battle.net
+│   └── roster_sync.py             # Populates SQLite database with guild roster data
 │
 └── tests/                         # Unit tests (pytest)
-    └── test_professions.py
+    ├── test_database.py           # Database service tests
+    └── test_professions.py        # Profession service tests
 ```
 
 ---
