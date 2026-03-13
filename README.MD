@@ -26,26 +26,11 @@ drama-emcee/
 ├── requirements.txt
 │
 ├── configs/                       # Connection secrets (gitignored — see *_example.py files)
-│   ├── blizz_conf_example.py
-│   ├── discord_conf_example.py
-│   └── redis_conf_example.py
-│
 ├── cogs/                          # Discord command modules (one file per feature group)
-│   ├── general.py                 # /ping, /roll
-│   └── professions.py             # /who_knows_recipe
-│
 ├── services/                      # Business logic & external API integrations
-│   ├── blizzard.py                # Battle.net API calls
-│   ├── cache.py                   # Redis read/write operations
-│   └── professions.py             # Profession & recipe query logic
-│
 ├── tasks/                         # Background / scheduled tasks
-│   ├── profession_sync.py         # Rebuilds the profession/recipe cache from Battle.net
-│   └── roster_sync.py             # Populates SQLite database with guild roster data
-│
 └── tests/                         # Unit tests (pytest)
-    ├── test_database.py           # Database service tests
-    └── test_professions.py        # Profession service tests
+
 ```
 
 ---
