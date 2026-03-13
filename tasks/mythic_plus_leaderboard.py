@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 def _format_leaderboard(season: str, rows: list[dict]) -> str:
     """Format the top-N results into a Discord message string."""
-    lines = [f"**Mythic+ Leaderboard — Season {season}**\n"]
+    lines = [f"**Mythic+ Leaderboard — {season}**\n"]
     for rank, row in enumerate(rows, start=1):
         name = row["name"].title()
         realm = row["realm"].replace("-", " ").title()
