@@ -3,47 +3,30 @@ Blizzard Battle.net API service layer.
 Wraps blizzardapi2 calls so the rest of the app never imports blizzardapi2 directly.
 """
 
-from datetime import datetime
-import re
-
 from configs import blizz_conf
 
 api_client = blizz_conf.api_client
 
-# Monkey-patch blizzardapi2's datetime parser to handle timestamps without microseconds
+# blizzardapi2's _is_token_expired() parses OAuth server timestamps with strptime
+# using a format that requires microseconds (%f). The OAuth server can return
+# timestamps without microseconds (e.g. '2026-04-11T15:00:01Z'), causing a
+# ValueError crash. Patch it to fall back safely — if we can't parse the
+# expiry, treat the token as expired so the next call triggers re-auth.
 try:
-    import blizzardapi2.utils as _bapi_utils
-    _orig_parse = _bapi_utils.parse_datetime
+    from blizzardapi2.api import BattleNetApi
 
-    def _safe_parse_datetime(value):
-        if not isinstance(value, str):
-            return _orig_parse(value)
-        # Normalize: add .000000 if microseconds missing (e.g. '2026-04-11T15:00:01Z')
-        import re
-        if re.match(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z', value):
-            value = value.replace('Z', '.000000Z')
-        return _orig_parse(value)
+    _orig_is_token_expired = BattleNetApi._is_token_expired
 
-    _bapi_utils.parse_datetime = _safe_parse_datetime
+    def _patched_is_token_expired(self):
+        try:
+            return _orig_is_token_expired(self)
+        except ValueError:
+            # Unparseable expiry timestamp — treat as expired to force re-auth
+            return True
+
+    BattleNetApi._is_token_expired = _patched_is_token_expired
 except Exception:
     pass  # blizzardapi2 version may have changed; fail silently
-
-
-def _normalize_datetime(value):
-    """Normalize datetime strings from the Blizzard API.
-
-    The API sometimes returns timestamps like '2026-04-11T15:00:01Z'
-    (no microseconds) which blizzardapi2 tries to parse as
-    '%Y-%m-%dT%H:%M:%S.%fZ'. This helper ensures microseconds are present
-    so the parsing always succeeds.
-    """
-    if not isinstance(value, str):
-        return value
-    # Already has microseconds — return as-is
-    if re.match(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z', value):
-        return value
-    # Add .000000 for microseconds if missing
-    return re.sub(r'(T\d{2}:\d{2}:\d{2})Z', r'\1.000000Z', value)
 
 
 def get_guild_roster(region: str, locale: str, guild_realm_slug: str, guild_slug: str) -> dict:
