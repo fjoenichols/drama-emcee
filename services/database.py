@@ -484,7 +484,7 @@ def get_top_mythic_plus(season: str, limit: int = 10) -> List[Dict]:
             SELECT c.name, c.realm, c.region, mp.score, mp.last_updated
             FROM mythic_plus mp
             JOIN characters c ON mp.character_id = c.id
-            WHERE mp.season = ? AND mp.score > 0
+            WHERE mp.season = ? AND mp.score > 0 AND CAST(last_updated AS DATE) = CAST(GETDATE() AS DATE)
             ORDER BY mp.score DESC
             LIMIT ?
         """, (season, limit))
