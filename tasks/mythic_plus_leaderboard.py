@@ -18,7 +18,7 @@ from discord_webhook import DiscordWebhook
 from services import database
 
 WEBHOOK_URL = discord_conf.LEADERBOARD_WEBHOOK_URL
-TOP_N = 10
+TOP_N = 20
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ def _format_leaderboard(season: str, rows: list[dict]) -> str:
 
 
 def run() -> None:
-    """Post the top 10 M+ ratings for the current active season to Discord."""
+    """Post the top 20 M+ ratings for the current active season to Discord."""
     season_row = database.get_current_season()
     if season_row is None:
         print("No season data found in the database. Run mythic_plus_ratings first.")
