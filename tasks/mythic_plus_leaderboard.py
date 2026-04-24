@@ -18,7 +18,7 @@ from discord_webhook import DiscordWebhook
 from services import database
 
 WEBHOOK_URL = discord_conf.LEADERBOARD_WEBHOOK_URL
-TOP_N = 20
+TOP_N = 25
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
